@@ -29,3 +29,13 @@ resource "cloudflare_record" "grafana" {
   content = module.cluster.ingress_public_ip
   proxied = true
 }
+
+resource "cloudflare_record" "argocd" {
+  count = var.manage_dns ? 1 : 0
+
+  zone_id = data.cloudflare_zone.site[0].id
+  name    = "argocd"
+  type    = "A"
+  content = module.cluster.ingress_public_ip
+  proxied = true
+}

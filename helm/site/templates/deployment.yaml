@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: site
+  labels:
+    {{- include "site.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "site.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "site.labels" . | nindent 8 }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "site.labels" . | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+      # deliberately non-root: the image listens on 8080, not a privileged port
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        fsGroup: 101
+      containers:
+        - name: site
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.containerPort }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.containerPort }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

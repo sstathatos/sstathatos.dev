@@ -1,0 +1,24 @@
+# DNS-01 via Cloudflare, not HTTP-01: DNS records are proxied
+# (terraform/production/dns.tf), so an HTTP-01 challenge would round-trip
+# through Cloudflare's edge before cert-manager's origin cert exists —
+# a chicken-and-egg "Full (strict)" problem. DNS-01 sidesteps it entirely.
+#
+# References a Secret (cloudflare-api-token) that is NOT in this repo —
+# created once, directly in the cluster, by whoever bootstraps this.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: st.stathatos@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-account-key
+    solvers:
+      - dns01:
+          cloudflare:
+            email: st.stathatos@gmail.com
+            apiKeySecretRef:
+              name: cloudflare-api-token
+              key: api-key

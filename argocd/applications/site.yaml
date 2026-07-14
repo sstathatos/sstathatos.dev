@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: site
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sstathatos/sstathatos.dev
+    targetRevision: master
+    path: helm/site
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: site
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

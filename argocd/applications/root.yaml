@@ -1,0 +1,27 @@
+# The one Application applied manually (bootstrap chicken-and-egg — ArgoCD
+# can't sync the manifest that tells it what to sync until it exists).
+# Everything else in argocd/applications/ is picked up automatically because
+# this Application points at the directory itself.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sstathatos/sstathatos.dev
+    targetRevision: master
+    path: argocd/applications
+    directory:
+      recurse: true
+      exclude: root.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

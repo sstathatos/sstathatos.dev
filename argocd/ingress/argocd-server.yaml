@@ -1,0 +1,30 @@
+# Exposes the ArgoCD UI at argocd.sstathatos.dev. argocd-server does its own
+# TLS on the same port it serves plaintext gRPC-Web on (8080, multiplexed) —
+# backend-protocol: HTTPS tells nginx to speak TLS to that port rather than
+# patching argocd-server into --insecure mode. The browser-facing cert is
+# still the Let's Encrypt one from cert-manager, same as the site's.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - argocd.sstathatos.dev
+      secretName: argocd-server-tls
+  rules:
+    - host: argocd.sstathatos.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  name: https
