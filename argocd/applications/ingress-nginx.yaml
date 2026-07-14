@@ -17,6 +17,13 @@ spec:
     helm:
       values: |
         controller:
+          admissionWebhooks:
+            # Disabled: its PreSync hook Job completes in ~2s and
+            # self-deletes (hook-succeeded), which races ArgoCD's hook
+            # status check and leaves the sync stuck "waiting for
+            # completion" indefinitely. Not needed for a single static
+            # Ingress — the webhook only validates Ingress syntax.
+            enabled: false
           kind: Deployment
           replicaCount: 1
           hostNetwork: true
