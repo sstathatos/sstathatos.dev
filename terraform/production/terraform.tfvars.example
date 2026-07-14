@@ -1,0 +1,23 @@
+# Copy to terraform.tfvars and fill in the real values.
+# Server IDs: `hcloud server list` (or the Hetzner console URL of each server).
+
+nodes = {
+  "cp-1" = {
+    server_id   = 10000001
+    server_type = "cax21"
+    location    = "fsn1"
+    role        = "server" # exactly one node must be "server"
+    private_ip  = "10.0.1.1"
+  }
+  "worker-1" = {
+    server_id   = 10000002
+    server_type = "cax21"
+    location    = "fsn1"
+    role        = "agent"
+    private_ip  = "10.0.1.2"
+  }
+}
+
+admin_ssh_ips = [
+  "203.0.113.7/32", # home
+]

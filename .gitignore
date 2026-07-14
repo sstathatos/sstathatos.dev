@@ -1,0 +1,34 @@
+# Personal working docs — plan, architecture notes, phase knowledge checks.
+# Not part of the public-facing repo.
+doc/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+!terraform.tfvars.example
+terraform.tfvars
+crash.log
+crash.*.log
+*.tfplan
+
+# Node / Astro
+node_modules/
+site/dist/
+site/.astro/
+
+# Secrets
+*.pem
+*.key
+.env
+.env.*
+id_rsa*
+*.token
+
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+
+# Claude Code local settings/state
+.claude/

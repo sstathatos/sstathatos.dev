@@ -1,0 +1,94 @@
+---
+import { experience } from '../data/cv';
+---
+
+<section id="experience">
+  <h2 class="section-title">Experience</h2>
+  <ol class="timeline">
+    {
+      experience.map((job, i) => (
+        <li>
+          <span class="idx" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div class="entry">
+            <div class="head">
+              <h3>{job.role} · {job.url ? <a href={job.url}>{job.company}</a> : job.company}</h3>
+              <span class="when">
+                {job.from} – {job.to} · {job.where}
+              </span>
+            </div>
+            <ul class="bullets">
+              {job.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .timeline {
+    list-style: none;
+    display: grid;
+    gap: 3rem;
+  }
+
+  .timeline > li {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 1.5rem;
+  }
+
+  .idx {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--text-muted);
+  }
+
+  .entry {
+    border-left: 2px solid var(--line);
+    padding-left: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  h3::after {
+    content: '_';
+    color: var(--accent);
+  }
+
+  .when {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  .bullets {
+    margin-top: 0.9rem;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .bullets li::marker {
+    content: '> ';
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  @media (max-width: 40rem) {
+    .timeline > li {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+  }
+</style>

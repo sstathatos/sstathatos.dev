@@ -1,0 +1,100 @@
+---
+import { skills, certifications, languages } from '../data/cv';
+---
+
+<section id="skills">
+  <h2 class="section-title">Skills</h2>
+  <dl class="grid">
+    {
+      skills.map((group) => (
+        <div class="group">
+          <dt>{group.category}</dt>
+          <dd>
+            {group.items.map((item) => (
+              <span class="chip">{item}</span>
+            ))}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <h2 class="section-title certs">Certifications</h2>
+  <ul class="certs-list">
+    {
+      certifications.map((cert) => (
+        <li>
+          <strong>{cert.name}</strong>
+          <span class="issuer">{cert.issuer}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="langs">
+    {languages.map((l) => `${l.name} (${l.level})`).join(' · ')}
+  </p>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 1.6rem;
+  }
+
+  .group {
+    border-top: 2px solid var(--line);
+    padding-top: 0.6rem;
+  }
+
+  dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.55rem;
+  }
+
+  dt::after {
+    content: '_';
+    color: var(--accent);
+  }
+
+  dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .certs {
+    margin-top: 3rem;
+  }
+
+  .certs-list {
+    list-style: none;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .certs-list li {
+    display: grid;
+  }
+
+  .certs-list strong {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.95rem;
+  }
+
+  .issuer {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  .langs {
+    margin-top: 1.6rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+</style>

@@ -1,0 +1,136 @@
+:root {
+  --bg: #dcd8cc;
+  --bg-raised: #e7e3d8;
+  --text: #17150f;
+  --text-muted: #565349;
+  --accent: #f04e23;
+  --line: #17150f;
+  --ghost: rgb(23 21 15 / 0.08);
+  --chip-bg: #17150f;
+  --chip-text: #e7e3d8;
+}
+
+[data-theme='dark'] {
+  --bg: #17150f;
+  --bg-raised: #211e16;
+  --text: #e5e0d3;
+  --text-muted: #9b968a;
+  --accent: #ff5a2e;
+  --line: #e5e0d3;
+  --ghost: rgb(229 224 211 / 0.07);
+  --chip-bg: #e5e0d3;
+  --chip-text: #17150f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Space Mono', ui-monospace, 'Cascadia Code', Menlo, monospace;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.container {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+h1, h2, h3 {
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+section {
+  padding: 4rem 0;
+  border-top: 1px solid var(--line);
+}
+
+/* "EXPERIENCE_" style section headers */
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 2.2rem;
+}
+
+.section-title::after {
+  content: '_';
+  color: var(--accent);
+}
+
+/* black label chip, e.g. "DEVOPS ENGINEER_" */
+.label {
+  display: inline-block;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.label::after {
+  content: '_';
+  color: var(--accent);
+}
+
+/* square bordered tech chip */
+.chip {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+/* brutalist button: hard border + offset shadow */
+.btn {
+  display: inline-block;
+  padding: 0.55rem 1.2rem;
+  border: 2px solid var(--line);
+  background: var(--bg-raised);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 var(--line);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.btn:hover {
+  color: var(--text);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--line);
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #17150f;
+}

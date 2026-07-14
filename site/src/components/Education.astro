@@ -1,0 +1,35 @@
+---
+import { education } from '../data/cv';
+---
+
+<section id="education">
+  <h2 class="section-title">Education</h2>
+  <div class="entry">
+    <h3><a href={education.url}>{education.school}</a></h3>
+    <p class="degree">{education.degree}</p>
+  </div>
+</section>
+
+<style>
+  .entry {
+    border-left: 2px solid var(--line);
+    padding-left: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  h3::after {
+    content: '_';
+    color: var(--accent);
+  }
+
+  .degree {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
+</style>

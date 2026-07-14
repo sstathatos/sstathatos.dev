@@ -1,0 +1,63 @@
+---
+import type { Project } from '../data/cv';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="card">
+  <div class="card-head">
+    <h3>
+      {project.url ? <a href={project.url}>{project.name}</a> : project.name}
+    </h3>
+    {project.badge && <span class="label">{project.badge}</span>}
+  </div>
+  <p>{project.description}</p>
+  <div class="tech">
+    {project.tech.map((t) => <span class="chip">{t}</span>)}
+  </div>
+</article>
+
+<style>
+  .card {
+    border: 2px solid var(--line);
+    background: var(--bg-raised);
+    box-shadow: 6px 6px 0 var(--line);
+    padding: 1.5rem 1.6rem;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  h3 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  h3::after {
+    content: '_';
+    color: var(--accent);
+  }
+
+  p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+</style>

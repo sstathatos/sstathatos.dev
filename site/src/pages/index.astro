@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import Education from '../components/Education.astro';
+import SkillsGrid from '../components/SkillsGrid.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { person, projects } from '../data/cv';
+---
+
+<Base
+  title={`${person.name} — ${person.title}`}
+  description={`${person.name}, ${person.title} in ${person.location}. Kubernetes, Terraform, CI/CD, GitOps.`}
+>
+  <Hero />
+  <ExperienceTimeline />
+  <Education />
+  <SkillsGrid />
+  <section id="projects">
+    <h2 class="section-title">Projects</h2>
+    <div class="cards">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cards {
+    display: grid;
+    gap: 1.1rem;
+  }
+</style>
