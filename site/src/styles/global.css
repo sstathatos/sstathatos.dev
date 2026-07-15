@@ -32,6 +32,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* clip, not hidden: kills any accidental horizontal scroll without
+   creating a new scroll container */
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   font-family: 'Space Mono', ui-monospace, 'Cascadia Code', Menlo, monospace;
   background: var(--bg);
