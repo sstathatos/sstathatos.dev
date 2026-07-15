@@ -111,9 +111,10 @@ export const projects: Project[] = [
   {
     name: 'Live infrastructure dashboard',
     description:
-      'A public, read-only Grafana dashboard of this very cluster — request rate, latency, per-node CPU and memory, pod restarts. Coming soon.',
+      'A public, read-only Grafana dashboard of this very cluster — request rate, latency, per-node CPU and memory, pod restarts. Watch it live below.',
     tech: ['Grafana', 'Prometheus', 'kube-prometheus-stack'],
-    badge: 'coming soon',
+    url: 'https://grafana.sstathatos.dev/d/live-infra/',
+    badge: 'live',
   },
 ];
 

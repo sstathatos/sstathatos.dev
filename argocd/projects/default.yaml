@@ -9,6 +9,7 @@ spec:
     - "https://github.com/sstathatos/sstathatos.dev"
     - "https://kubernetes.github.io/ingress-nginx"
     - "https://charts.jetstack.io"
+    - "https://prometheus-community.github.io/helm-charts"
   destinations:
     - namespace: "*"
       server: https://kubernetes.default.svc

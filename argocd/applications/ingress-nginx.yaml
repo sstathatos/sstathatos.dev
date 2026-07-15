@@ -40,6 +40,13 @@ spec:
             type: ClusterIP
           publishService:
             enabled: false
+          # scraped by the monitoring stack; the ServiceMonitor CRD comes
+          # from kube-prometheus-stack — first sync may retry until the
+          # monitoring app has installed the CRDs, then selfHeal settles it
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx

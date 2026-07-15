@@ -1,0 +1,107 @@
+# kube-prometheus-stack sized for a 2×4GB-node cluster: no Alertmanager,
+# 7d retention, tight resource requests. Grafana is public read-only
+# (anonymous Viewer) at grafana.sstathatos.dev; dashboards are provisioned
+# from git via the sidecar (see monitoring/ and the monitoring-extras app).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 87.16.1
+    helm:
+      values: |
+        alertmanager:
+          enabled: false
+
+        prometheus:
+          prometheusSpec:
+            retention: 7d
+            # pick up every ServiceMonitor/PodMonitor in the cluster, not
+            # only those labeled with this Helm release
+            serviceMonitorSelectorNilUsesHelmValues: false
+            podMonitorSelectorNilUsesHelmValues: false
+            resources:
+              requests:
+                cpu: 150m
+                memory: 400Mi
+              limits:
+                memory: 900Mi
+
+        grafana:
+          adminPassword: null # generated; kubectl get secret monitoring-grafana
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-prod
+            hosts:
+              - grafana.sstathatos.dev
+            tls:
+              - hosts:
+                  - grafana.sstathatos.dev
+                secretName: grafana-sstathatos-dev-tls
+          grafana.ini:
+            server:
+              root_url: https://grafana.sstathatos.dev
+            # public read-only access + iframe embedding on the site
+            auth.anonymous:
+              enabled: true
+              org_role: Viewer
+            security:
+              allow_embedding: true
+            dashboards:
+              default_home_dashboard_path: /tmp/dashboards/live-infrastructure.json
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          sidecar:
+            dashboards:
+              enabled: true
+              searchNamespace: ALL
+
+        kube-state-metrics:
+          resources:
+            requests:
+              cpu: 20m
+              memory: 48Mi
+            limits:
+              memory: 128Mi
+
+        prometheus-node-exporter:
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
+
+        # k3s runs the control plane as one process — these components have
+        # no separate pods/endpoints to scrape, so drop the dead targets
+        kubeControllerManager:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        kubeProxy:
+          enabled: false
+        kubeEtcd:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true # CRDs exceed the client-side annotation size limit

@@ -1,0 +1,105 @@
+# Grafana sidecar (grafana_dashboard label) provisions this into the
+# public Grafana. The dashboard is the "Live Infrastructure" view embedded
+# on sstathatos.dev — uid is referenced by the site's iframe, don't change.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: live-infrastructure-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  live-infrastructure.json: |
+    {
+      "uid": "live-infra",
+      "title": "Live Infrastructure — sstathatos.dev",
+      "timezone": "browser",
+      "editable": false,
+      "refresh": "30s",
+      "time": { "from": "now-6h", "to": "now" },
+      "panels": [
+        {
+          "id": 1,
+          "type": "timeseries",
+          "title": "HTTP requests/s (ingress-nginx)",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+          "fieldConfig": { "defaults": { "unit": "reqps", "color": { "mode": "palette-classic" } }, "overrides": [] },
+          "targets": [
+            {
+              "expr": "sum by (host) (rate(nginx_ingress_controller_requests[5m]))",
+              "legendFormat": "{{host}}"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "type": "timeseries",
+          "title": "Request latency p95 (s)",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+          "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "palette-classic" } }, "overrides": [] },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum by (le) (rate(nginx_ingress_controller_request_duration_seconds_bucket[5m])))",
+              "legendFormat": "p95"
+            },
+            {
+              "expr": "histogram_quantile(0.50, sum by (le) (rate(nginx_ingress_controller_request_duration_seconds_bucket[5m])))",
+              "legendFormat": "p50"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "type": "timeseries",
+          "title": "Node CPU usage",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+          "fieldConfig": { "defaults": { "unit": "percentunit", "max": 1, "color": { "mode": "palette-classic" } }, "overrides": [] },
+          "targets": [
+            {
+              "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]))",
+              "legendFormat": "{{instance}}"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "type": "timeseries",
+          "title": "Node memory usage",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+          "fieldConfig": { "defaults": { "unit": "percentunit", "max": 1, "color": { "mode": "palette-classic" } }, "overrides": [] },
+          "targets": [
+            {
+              "expr": "1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+              "legendFormat": "{{instance}}"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "stat",
+          "title": "Site replicas available",
+          "gridPos": { "h": 6, "w": 12, "x": 0, "y": 16 },
+          "fieldConfig": { "defaults": { "unit": "none", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "yellow", "value": 1 }, { "color": "green", "value": 2 } ] } }, "overrides": [] },
+          "targets": [
+            {
+              "expr": "kube_deployment_status_replicas_available{namespace=\"site\", deployment=\"site\"}",
+              "legendFormat": "replicas"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "timeseries",
+          "title": "Container restarts (1h, by namespace)",
+          "gridPos": { "h": 6, "w": 12, "x": 12, "y": 16 },
+          "fieldConfig": { "defaults": { "unit": "none", "color": { "mode": "palette-classic" } }, "overrides": [] },
+          "targets": [
+            {
+              "expr": "sum by (namespace) (increase(kube_pod_container_status_restarts_total[1h]))",
+              "legendFormat": "{{namespace}}"
+            }
+          ]
+        }
+      ],
+      "schemaVersion": 39
+    }

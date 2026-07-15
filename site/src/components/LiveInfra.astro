@@ -1,0 +1,46 @@
+---
+const dashboardUrl = 'https://grafana.sstathatos.dev/d/live-infra/';
+// kiosk mode strips Grafana chrome for the embed
+const embedUrl = `${dashboardUrl}?kiosk&refresh=30s`;
+---
+
+<section id="live">
+  <h2 class="section-title">Live Infrastructure</h2>
+  <p class="blurb">
+    Real metrics from the cluster serving this page — scraped by Prometheus,
+    rendered by Grafana, deployed by ArgoCD.
+    <a href={dashboardUrl}>Open the full dashboard</a>.
+  </p>
+  <div class="frame">
+    <iframe
+      src={embedUrl}
+      title="Live infrastructure metrics (Grafana)"
+      loading="lazy"
+      sandbox="allow-scripts allow-same-origin"></iframe>
+  </div>
+</section>
+
+<style>
+  .blurb {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.6rem;
+    max-width: 44rem;
+  }
+
+  .frame {
+    border: 2px solid var(--line);
+    box-shadow: 6px 6px 0 var(--line);
+    background: var(--bg-raised);
+    /* 16:10-ish; tall enough for two panel rows on desktop */
+    aspect-ratio: 16 / 10;
+    min-height: 24rem;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+</style>

@@ -5,6 +5,7 @@ import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import Education from '../components/Education.astro';
 import SkillsGrid from '../components/SkillsGrid.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import LiveInfra from '../components/LiveInfra.astro';
 import { person, projects } from '../data/cv';
 ---
 
@@ -22,6 +23,7 @@ import { person, projects } from '../data/cv';
       {projects.map((project) => <ProjectCard project={project} />)}
     </div>
   </section>
+  <LiveInfra />
 </Base>
 
 <style>
