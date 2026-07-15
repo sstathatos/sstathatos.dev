@@ -10,7 +10,7 @@ import { person } from '../data/cv';
     <h1>
       Automate<span class="u">_</span><br />
       Deploy<span class="u">_</span><br />
-      Observe<span class="u">_</span>
+      Observe<span class="u cursor">_</span>
     </h1>
   </div>
 
@@ -31,6 +31,23 @@ import { person } from '../data/cv';
     color: var(--accent);
   }
 
+  /* terminal cursor blink on the final underscore */
+  .cursor {
+    animation: blink 1.1s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor {
+      animation: none;
+    }
+  }
+
   .hero {
     position: relative;
     display: grid;
@@ -38,6 +55,14 @@ import { person } from '../data/cv';
     gap: 2rem 3rem;
     padding: 4.5rem 0 4rem;
     overflow: hidden;
+    /* subtle plotter-paper dot grid behind the hero */
+    background-image: radial-gradient(var(--ghost) 1.5px, transparent 1.5px);
+    background-size: 26px 26px;
+  }
+
+  .hero :global(.label) {
+    transform: rotate(-1.5deg);
+    display: inline-block;
   }
 
   .ghost {

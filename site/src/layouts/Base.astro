@@ -2,7 +2,7 @@
 import '@fontsource/space-mono/400.css';
 import '@fontsource/space-mono/700.css';
 import '../styles/global.css';
-import { person } from '../data/cv';
+import { person, skills } from '../data/cv';
 
 interface Props {
   title: string;
@@ -10,6 +10,12 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+
+// vertical side-strip content: every skill from the CV data, deduplicated;
+// built as HTML so the trailing underscores keep the accent color
+const stripWords = [...new Set(skills.flatMap((g) => g.items))];
+const stripTrack =
+  stripWords.map((w) => `${w.toUpperCase()}<span class="u">_</span>`).join('  //  ') + '  //  ';
 ---
 
 <!doctype html>
@@ -35,7 +41,7 @@ const { title, description } = Astro.props;
     </div>
 
     <header class="container site-header">
-      <a class="logo" href="/">s7s<span class="u">_</span></a>
+      <a class="logo" href="/">sst<span class="u">_</span></a>
       <nav>
         <a href="#experience">Experience</a>
         <a href="#education">Education</a>
@@ -46,7 +52,9 @@ const { title, description } = Astro.props;
     </header>
 
     <aside class="side-strip" aria-hidden="true">
-      DevOps Engineering | Kubernetes | GitOps | Terraform | CI/CD<span class="u">_</span>
+      <div class="strip-track">
+        <span set:html={stripTrack} /><span set:html={stripTrack} />
+      </div>
     </aside>
 
     <main class="container">
@@ -117,10 +125,13 @@ const { title, description } = Astro.props;
     font-size: 1.1rem;
     padding: 0.15rem 0.6rem;
     text-decoration: none;
+    transform: rotate(-2deg);
+    transition: transform 0.15s ease;
   }
 
   .logo:hover {
     color: var(--chip-text);
+    transform: rotate(2deg) scale(1.06);
   }
 
   nav {
@@ -136,6 +147,13 @@ const { title, description } = Astro.props;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     white-space: nowrap;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-color 0.12s ease, color 0.12s ease;
+  }
+
+  nav a:hover {
+    text-decoration-thickness: 3px;
+    text-decoration-color: var(--accent);
   }
 
   @media (max-width: 40rem) {
@@ -178,15 +196,44 @@ const { title, description } = Astro.props;
     width: 2.6rem;
     background: var(--chip-bg);
     color: var(--accent);
+    overflow: hidden;
+    z-index: 10;
+  }
+
+  /* dark theme: match the name-label banner — beige with charcoal text
+     (orange text on beige glares) */
+  :global([data-theme='dark']) .side-strip {
+    color: var(--chip-text);
+  }
+
+  /* underscores stay orange in both themes (set:html skips scoping) */
+  .strip-track :global(.u) {
+    color: var(--accent);
+  }
+
+  /* two identical spans scrolling upward = seamless vertical marquee */
+  .strip-track {
     writing-mode: vertical-rl;
     display: flex;
-    align-items: center;
-    padding: 1.5rem 0;
+    height: max-content;
+    animation: strip-scroll 60s linear infinite;
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    z-index: 10;
+    white-space: pre;
+  }
+
+  @keyframes strip-scroll {
+    to {
+      transform: translateY(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .strip-track {
+      animation: none;
+    }
   }
 
   @media (max-width: 60rem) {

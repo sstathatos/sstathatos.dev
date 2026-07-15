@@ -112,6 +112,13 @@ section {
   background: var(--bg-raised);
   font-size: 0.8rem;
   color: var(--text);
+  transition: background 0.12s ease, color 0.12s ease, transform 0.12s ease;
+}
+
+.chip:hover {
+  background: var(--accent);
+  color: #17150f;
+  transform: rotate(-1.5deg);
 }
 
 /* brutalist button: hard border + offset shadow */
