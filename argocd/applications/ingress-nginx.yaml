@@ -17,6 +17,8 @@ spec:
     helm:
       values: |
         controller:
+          updateStrategy:
+            type: Recreate
           admissionWebhooks:
             # Disabled: its PreSync hook Job completes in ~2s and
             # self-deletes (hook-succeeded), which races ArgoCD's hook
