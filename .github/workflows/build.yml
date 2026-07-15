@@ -41,7 +41,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Scan image (Trivy)
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ghcr.io/${{ github.repository }}:${{ github.sha }}
           # fail the build on CRITICAL; HIGH is reported but non-blocking
@@ -51,7 +51,7 @@ jobs:
           ignore-unfixed: true
 
       - name: Report HIGH vulnerabilities (non-blocking)
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ghcr.io/${{ github.repository }}:${{ github.sha }}
           severity: HIGH
