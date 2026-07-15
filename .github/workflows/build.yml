@@ -1,4 +1,4 @@
-name: Build and publish site image
+name: Build, scan, publish, deploy
 
 on:
   push:
@@ -10,8 +10,12 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: read
+  contents: write # the tag-bump step commits to master
   packages: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -27,12 +31,55 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # build locally first — the image is only pushed after the scan passes
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Scan image (Trivy)
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          # fail the build on CRITICAL; HIGH is reported but non-blocking
+          # (alpine base images routinely carry transient HIGH CVEs)
+          severity: CRITICAL
+          exit-code: "1"
+          ignore-unfixed: true
+
+      - name: Report HIGH vulnerabilities (non-blocking)
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          severity: HIGH
+          exit-code: "0"
+
+      # instant re-run from cache; :latest kept as a convenience alias
       - uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+
+      # GitOps hand-off: pin the new tag in the Helm values and commit.
+      # ArgoCD sees the change and performs the rollout — CI never touches
+      # the cluster. No trigger loop: helm/** is outside this workflow's
+      # paths filter.
+      - name: Bump image tag in Helm values
+        run: |
+          sed -i 's|^  tag: .*|  tag: "${{ github.sha }}"|' helm/site/values.yaml
+          if git diff --quiet; then
+            echo "tag unchanged, nothing to commit"
+            exit 0
+          fi
+          git config user.name "sstathatos"
+          git config user.email "st.stathatos@gmail.com"
+          git add helm/site/values.yaml
+          git commit -m "chore: deploy site ${GITHUB_SHA::12} [skip ci]"
+          git push
