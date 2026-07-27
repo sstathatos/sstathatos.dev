@@ -18,6 +18,7 @@ nodes = {
   }
 }
 
+# kubernetes API (6443) only; SSH is open to the internet.
 admin_ssh_ips = [
   "203.0.113.7/32", # home
 ]

@@ -10,7 +10,7 @@ variable "nodes" {
 }
 
 variable "admin_ssh_ips" {
-  description = "CIDRs allowed to reach SSH on the public interface"
+  description = "CIDRs allowed to reach the kubernetes API on the public interface"
   type        = list(string)
 }
 

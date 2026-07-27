@@ -59,11 +59,11 @@ resource "hcloud_firewall" "base" {
   name = "sstathatos-base"
 
   rule {
-    description = "SSH from admin IPs only"
+    description = "SSH"
     direction   = "in"
     protocol    = "tcp"
     port        = "22"
-    source_ips  = var.admin_ssh_ips
+    source_ips  = ["0.0.0.0/0", "::/0"]
   }
 
   rule {
