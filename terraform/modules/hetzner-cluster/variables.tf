@@ -37,8 +37,3 @@ variable "network_zone" {
   type        = string
   default     = "eu-central"
 }
-
-variable "admin_ssh_ips" {
-  description = "CIDRs allowed to reach the kubernetes API on the public interface"
-  type        = list(string)
-}

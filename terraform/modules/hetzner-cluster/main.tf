@@ -67,11 +67,11 @@ resource "hcloud_firewall" "base" {
   }
 
   rule {
-    description = "kubernetes API from admin IPs (local kubectl)"
+    description = "kubernetes API (local kubectl)"
     direction   = "in"
     protocol    = "tcp"
     port        = "6443"
-    source_ips  = var.admin_ssh_ips
+    source_ips  = ["0.0.0.0/0", "::/0"]
   }
 
   rule {

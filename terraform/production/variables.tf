@@ -9,11 +9,6 @@ variable "nodes" {
   }))
 }
 
-variable "admin_ssh_ips" {
-  description = "CIDRs allowed to reach the kubernetes API on the public interface"
-  type        = list(string)
-}
-
 variable "domain" {
   type    = string
   default = "sstathatos.dev"

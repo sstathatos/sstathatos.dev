@@ -24,6 +24,5 @@ provider "cloudflare" {}
 module "cluster" {
   source = "../modules/hetzner-cluster"
 
-  nodes         = var.nodes
-  admin_ssh_ips = var.admin_ssh_ips
+  nodes = var.nodes
 }
