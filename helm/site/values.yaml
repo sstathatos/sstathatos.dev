@@ -2,7 +2,7 @@ image:
   repository: ghcr.io/sstathatos/sstathatos.dev
   # pinned by CI on every build (see .github/workflows/build.yml) — do not
   # edit by hand; git history of this line is the deploy history
-  tag: "666df248c80591fdeaa5e6e439ef863b508e9963"
+  tag: "09161362429ae4fd9f666a657e24ce110439b919"
   pullPolicy: IfNotPresent
 
 replicaCount: 2
