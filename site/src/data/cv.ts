@@ -79,9 +79,23 @@ export const skills: { category: string; items: string[] }[] = [
   { category: 'OS & VCS', items: ['Linux', 'Git'] },
 ];
 
-export const certifications = [
-  { name: 'AWS Certified Solutions Architect – Associate', issuer: 'Amazon Web Services' },
-  { name: 'Certified Kubernetes Administrator (CKA)', issuer: 'The Linux Foundation' },
+export interface Certification {
+  name: string;
+  issuer: string;
+  url?: string;
+}
+
+export const certifications: Certification[] = [
+  {
+    name: 'AWS Certified Solutions Architect – Associate',
+    issuer: 'Amazon Web Services',
+    url: 'https://www.credly.com/badges/da95d4cd-9b0a-4047-882f-3934542b7591',
+  },
+  {
+    name: 'Certified Kubernetes Administrator (CKA)',
+    issuer: 'The Linux Foundation',
+    url: 'https://www.credly.com/badges/42877ae4-3f0a-4af1-bb0d-8bc7e735afcf',
+  },
 ];
 
 export interface Project {

@@ -19,18 +19,19 @@ import { skills, certifications, languages } from '../data/cv';
     }
   </dl>
 
-  <h2 class="section-title certs">Certifications</h2>
+  <h2 class="section-title subhead">Certifications</h2>
   <ul class="certs-list">
     {
       certifications.map((cert) => (
         <li>
-          <strong>{cert.name}</strong>
+          <strong>{cert.url ? <a href={cert.url}>{cert.name}</a> : cert.name}</strong>
           <span class="issuer">{cert.issuer}</span>
         </li>
       ))
     }
   </ul>
 
+  <h2 class="section-title subhead">Languages</h2>
   <p class="langs">
     {languages.map((l) => `${l.name} (${l.level})`).join(' · ')}
   </p>
@@ -67,7 +68,7 @@ import { skills, certifications, languages } from '../data/cv';
     gap: 0.4rem;
   }
 
-  .certs {
+  .subhead {
     margin-top: 3rem;
   }
 
@@ -93,7 +94,6 @@ import { skills, certifications, languages } from '../data/cv';
   }
 
   .langs {
-    margin-top: 1.6rem;
     color: var(--text-muted);
     font-size: 0.85rem;
   }
