@@ -16,6 +16,18 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
+          # Same backend as "/", split out only so ingress-nginx reports it
+          # under its own `path` label. That leaves path="/" as (near enough)
+          # HTML document loads rather than every bundled asset too, which is
+          # what the visitors panel on the live-infra dashboard counts.
+          # Must stay in step with the /_astro/ location in site/nginx.conf.
+          - path: /_astro
+            pathType: Prefix
+            backend:
+              service:
+                name: site
+                port:
+                  number: 80
           - path: /
             pathType: Prefix
             backend:

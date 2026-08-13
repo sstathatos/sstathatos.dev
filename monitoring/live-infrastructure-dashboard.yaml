@@ -99,6 +99,39 @@ data:
               "legendFormat": "{{namespace}}"
             }
           ]
+        },
+        {
+          "id": 7,
+          "type": "stat",
+          "title": "Site visitors (24h, approx.)",
+          "description": "An approximation, not a true unique count. ingress-nginx exports no client identity — no IP, cookie or session label exists on any metric here — so this counts cold-cache HTML document loads of sstathatos.dev instead: GETs that returned 200 rather than 304, on the ingress path that excludes /_astro/ assets. One person over several visits counts once while their browser cache holds; crawlers and cache-clearing visitors inflate it. For real unique visitors this needs log-based (Loki) or script-based analytics.",
+          "gridPos": { "h": 6, "w": 6, "x": 0, "y": 22 },
+          "fieldConfig": { "defaults": { "unit": "none", "decimals": 0, "color": { "mode": "fixed", "fixedColor": "blue" } }, "overrides": [] },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+          "targets": [
+            {
+              "expr": "sum(increase(nginx_ingress_controller_requests{host=\"sstathatos.dev\", path=\"/\", method=\"GET\", status=\"200\"}[24h]))",
+              "legendFormat": "visitors"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "type": "timeseries",
+          "title": "Site page loads/hour — first-time vs returning (approx.)",
+          "description": "Same caveat as the visitors stat: derived from cache behaviour, not from client identity. 200 means the browser fetched the document fresh; 304 means it revalidated a copy it already had, so it had been here before.",
+          "gridPos": { "h": 6, "w": 18, "x": 6, "y": 22 },
+          "fieldConfig": { "defaults": { "unit": "none", "color": { "mode": "palette-classic" } }, "overrides": [] },
+          "targets": [
+            {
+              "expr": "sum(increase(nginx_ingress_controller_requests{host=\"sstathatos.dev\", path=\"/\", method=\"GET\", status=\"200\"}[1h]))",
+              "legendFormat": "first-time / cold cache"
+            },
+            {
+              "expr": "sum(increase(nginx_ingress_controller_requests{host=\"sstathatos.dev\", path=\"/\", method=\"GET\", status=\"304\"}[1h]))",
+              "legendFormat": "returning / cached"
+            }
+          ]
         }
       ],
       "schemaVersion": 39
