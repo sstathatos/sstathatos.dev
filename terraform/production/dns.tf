@@ -39,3 +39,16 @@ resource "cloudflare_record" "argocd" {
   content = module.cluster.ingress_public_ip
   proxied = true
 }
+
+# elcourtside — Euroleague stats. Deployed from its own repo; the Ingress in
+# that chart answers for this host, so all this record does is point the name
+# at the same cluster ingress as everything else.
+resource "cloudflare_record" "elcourtside" {
+  count = var.manage_dns ? 1 : 0
+
+  zone_id = data.cloudflare_zone.site[0].id
+  name    = "elcourtside"
+  type    = "A"
+  content = module.cluster.ingress_public_ip
+  proxied = true
+}

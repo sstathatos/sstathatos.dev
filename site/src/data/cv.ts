@@ -94,19 +94,20 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    name: 'elcourtside',
+    description:
+      'A fan-made Euroleague statistics site: standings, boxscores and PIR leaderboards, plus play-by-play-derived indexes for clutch performance, scoring runs and blown leads. A FastAPI backend and ingest ETL behind an Astro/React frontend, running on the cluster below and deployed by the same ArgoCD app-of-apps.',
+    tech: ['FastAPI', 'Astro', 'React', 'Kubernetes', 'Helm', 'ArgoCD'],
+    url: 'https://elcourtside.sstathatos.dev',
+    badge: 'live',
+  },
+  {
     name: 'This platform',
     description:
       'The site you are reading runs on infrastructure built from scratch: two Hetzner servers imported into Terraform, a 2-node k3s cluster joined over a private network, ingress-nginx with Let’s Encrypt TLS, and every workload deployed declaratively through ArgoCD from a single Git repository.',
     tech: ['Terraform', 'k3s', 'ArgoCD', 'Helm', 'GitHub Actions', 'Cloudflare'],
     url: 'https://github.com/sstathatos/sstathatos.dev',
     badge: 'live',
-  },
-  {
-    name: 'shop-devops',
-    description:
-      'A microservices e-shop built as a DevOps deep-dive: FastAPI services communicating over RabbitMQ, deployed to Kubernetes with Helm and ArgoCD, with Vault for secrets and a full Prometheus/Grafana observability stack.',
-    tech: ['Kubernetes', 'Helm', 'ArgoCD', 'RabbitMQ', 'Vault', 'Prometheus'],
-    url: 'https://github.com/sstathatos/shop-devops',
   },
   {
     name: 'Live infrastructure dashboard',
