@@ -1,0 +1,38 @@
+# elcourtside — Euroleague stats. Lives in its own repo; only this pointer
+# lives here, so the app-of-apps stays the single list of what runs.
+#
+# Image tags are pinned in that repo's helm/elcourtside/values.yaml by its CI
+# on every build, so a deploy is a commit there, not an edit here.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elcourtside
+  namespace: argocd
+  annotations:
+    # After ingress-nginx and cert-manager exist, so the Ingress and its
+    # certificate can be created on the first sync rather than erroring.
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sstathatos/elcourtside
+    targetRevision: master
+    path: helm/elcourtside
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: elcourtside
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    # The backup claim binds only when the first backup job runs
+    # (WaitForFirstConsumer), so it sits Pending until then. That is normal,
+    # not drift.
+    - group: ""
+      kind: PersistentVolumeClaim
+      name: elcourtside-backup
+      jsonPointers:
+        - /status
