@@ -44,9 +44,12 @@ import { skills, certifications, languages } from '../data/cv';
     gap: 1.6rem;
   }
 
+  /* vertical rule rather than a bar over each heading — same treatment as
+     the Education entry, and it reads as a column edge instead of stacking
+     horizontal lines down the grid */
   .group {
-    border-top: 2px solid var(--line);
-    padding-top: 0.6rem;
+    border-left: 2px solid var(--line);
+    padding-left: 1rem;
   }
 
   dt {
@@ -94,7 +97,7 @@ import { skills, certifications, languages } from '../data/cv';
   }
 
   .langs {
-    color: var(--text-muted);
+    color: var(--text);
     font-size: 0.85rem;
   }
 </style>
