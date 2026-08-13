@@ -7,6 +7,9 @@ spec:
   description: Default project — everything on this single-tenant cluster
   sourceRepos:
     - "https://github.com/sstathatos/sstathatos.dev"
+    # elcourtside keeps its chart in its own repo, so the project must allow
+    # it explicitly — this list is an allowlist, not documentation.
+    - "https://github.com/sstathatos/elcourtside"
     - "https://kubernetes.github.io/ingress-nginx"
     - "https://charts.jetstack.io"
     - "https://prometheus-community.github.io/helm-charts"
